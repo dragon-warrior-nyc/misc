@@ -21,7 +21,7 @@ Kaggle notebooks (kernels) are synced using the Kaggle CLI `kernels` commands.
 - Pull an existing kernel to a local folder:
 
 ```bash
-kaggle kernels pull <owner>/<kernel-slug> -p path/to/local/folder
+kaggle kernels pull <username>/<notebook-slug> -m
 ```
 
 - Edit in VS Code.
