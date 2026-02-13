@@ -18,6 +18,11 @@ Or on macOS with Homebrew:
 brew install uv
 ```
 
+Verify the installation:
+```bash
+uv --version
+```
+
 ## Creating a New Project from Scratch
 
 To create your own Python project using uv:
@@ -66,13 +71,44 @@ build-backend = "hatchling.build"
 ### 4. Add Dependencies
 
 ```bash
-# Add dependencies using uv
+# Add runtime dependencies (needed to run your application)
 uv add requests
 uv add pandas numpy
-uv add --dev pytest  # Add development dependencies
+
+# Add development dependencies (only needed during development)
+uv add --dev pytest ruff black
 ```
 
-This automatically updates your `pyproject.toml` file.
+**What are development dependencies?**
+- **Runtime dependencies** (`uv add`): Required for your application to run (e.g., requests, pandas)
+- **Development dependencies** (`uv add --dev`): Only needed during development, testing, or building (e.g., pytest for testing, ruff for linting, black for formatting)
+
+Development dependencies are stored separately in `pyproject.toml` under `[project.optional-dependencies]` or `[dependency-groups]` and won't be installed in production environments.
+
+This automatically updates your `pyproject.toml` file. After adding dependencies, it might look like:
+
+```toml
+[project]
+name = "my-project"
+version = "0.1.0"
+dependencies = [
+    "requests>=2.31.0",
+    "pandas>=2.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.1.0",
+]
+```
+
+**How `uv sync` uses this information:**
+- `uv sync` - Installs both runtime AND development dependencies (default)
+- `uv sync --no-dev` - Installs only runtime dependencies (for production)
+- `uv sync --only-dev` - Installs only development dependencies
+
+This allows you to have different dependency sets for development vs production environments.
 
 ### 5. Pin Python Version (Optional)
 
